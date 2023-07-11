@@ -1,27 +1,54 @@
 import React, { Fragment, useState } from 'react';
 import {Link} from 'react-router-dom';
+import axios from 'axios';
 
 const Register = () => {
     const [formData, setFormData] = useState({
         name: '',
-        phone_number: '',
+        phone: '',
         email: '',
         password: '',
         password_confirm: ''
     });
 
-    const { name, phone_number, email, password, password_confirm} = formData;
+    const { name, phone, email, password, password_confirm} = formData;
 
     const onChange = e => 
         setFormData({ ...formData, [e.target.name]: e.target.value});
 
-    const onSubmit = e => {
+    const onSubmit = async e => {
         e.preventDefault();
 
         if(password !== password_confirm) {
             console.log('pass fail');
         } else {
-            console.log(formData);
+            // console.log(formData);
+            const newUser = {
+                name,
+                phone,
+                email,
+                password
+            };
+
+            try {
+                const config = {
+                    Headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+                const body = JSON.stringify(newUser);
+                const res = await axios.post('/api', body, config);
+                console.log(res.data);
+                setFormData({
+                    name: '',
+                    phone: '',
+                    email: '',
+                    password: '',
+                    password_confirm: ''
+                });
+            } catch (err) {
+                console.log(err.response.data);
+            }
         }
     };
 
@@ -55,8 +82,8 @@ const Register = () => {
                     <input 
                         type="text" 
                         placeholder="Phone" 
-                        name="phone_number" 
-                        value={phone_number} 
+                        name="phone" 
+                        value={phone} 
                         onChange={e => onChange(e)}
                         required 
                     />
