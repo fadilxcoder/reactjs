@@ -2,8 +2,9 @@ import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import {Link} from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
+import { register } from '../../actions/auth';
 
-const Register = ({ setAlert }) => {
+const Register = ({ setAlert, register }) => {
     const [formData, setFormData] = useState({
         name: '',
         phone_number: '',
@@ -23,7 +24,18 @@ const Register = ({ setAlert }) => {
         if(password !== password_confirm) {
             setAlert('Passwords do not match', 'danger', 3000);
         } else {
-            console.log(formData);
+            //console.log(formData);
+            register({
+                name, email, phone_number, password
+            });
+
+            setFormData({
+                name: '',
+                phone_number: '',
+                email: '',
+                password: '',
+                password_confirm: ''
+            });
         }
     };
 
@@ -94,5 +106,5 @@ const Register = ({ setAlert }) => {
 
 export default connect(
     null, 
-    { setAlert }
+    { setAlert, register }
 )(Register);
